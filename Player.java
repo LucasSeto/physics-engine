@@ -25,6 +25,6 @@ public class Player extends Entity{
     public void inputs(){
         if (GamePanel.key.keys[KeyEvent.VK_A]){
             this.fnet.set_mag(this.fnet.get_mag() + 0.05);
-        } 
+        }
     }
 }

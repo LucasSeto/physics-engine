@@ -16,7 +16,7 @@ public class Entity {
         this.pos = pos;
         this.vel = vel;
         this.acc = new Vector(0, 0);
-        this.fnet = new Vector(0, 30);
+        this.fnet = new Vector(0, 0);
         this.mass = mass;
         this.hitbox = new Rectangle((int)pos[0] - this.mass/2, (int)pos[1] - this.mass/2, mass, mass);
 
@@ -30,11 +30,11 @@ public class Entity {
 
         //accelerate
         this.vel = Utils.add_vector(this.vel, this.acc);
-        this.acc.set_mag(this.acc.get_mag() + fnet.get_mag()/this.mass);
+        this.acc.set_mag(fnet.get_mag()/this.mass);
         this.acc.set_ang(fnet.get_ang());
 
-        
     }
+
     public void draw(Graphics2D g2D){
         g2D.setColor(Color.WHITE);
         g2D.fillRect((int)this.pos[0] - mass/2, (int)this.pos[1] - mass/2, mass, mass);
