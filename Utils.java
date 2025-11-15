@@ -102,14 +102,16 @@ public class Utils {
         return font;
     }
 
-    public static double[] toVector(double[] components){
+    public static Vector toVector(double[] components){
         double magnitude = Math.sqrt(Math.pow(components[0], 2) + Math.pow(components[1], 2));// pythag theorum
-        double ang = Math.atan2(components[1], components[0]);// tan inverse of the y over the x
-        return new double[]{magnitude, ang};
+        double ang = Math.toDegrees(Math.atan2(components[1], components[0]));// tan inverse of the y over the x
+        return new Vector(magnitude, ang);
     }
-    public static int[] toComponent(double[] vector){
-        double x_comp = vector[0]*Math.cos(vector[1]);// x component of the vector is the mag times the cos of theta
-        double y_comp = vector[0]*Math.sin(vector[1]);// y component of the vector is the mag times the sin of theta
-        return new int[]{(int)x_comp, (int)y_comp};
+    public static Vector add_vector(Vector vector_A, Vector vector_B){// method adds 2 vectors and returns the resultant vector
+        double[] A_components = vector_A.components();
+        double[] B_components = vector_B.components();
+        double resultant_mag_x = A_components[0] + B_components[0];
+        double resultant_mag_y = A_components[1] + B_components[1];
+        return toVector(new double[]{resultant_mag_x, resultant_mag_y});
     }
 }
