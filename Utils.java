@@ -22,8 +22,7 @@ public class Utils {
     public static final Image black_king = new ImageIcon("assets/img/king.jpg").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
     public static final Image revolver = new ImageIcon("assets/img/revolver.jpg").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
     public static final Image crosshair = new ImageIcon("assets/img/crosshair.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-    public static final Image bullet = new ImageIcon("assets/img/bullet.jpg").getImage().getScaledInstance(10, 10, Image.SCALE_DEFAULT);
-    
+
     // public static final BufferedImage[][] walkSprite = loadPlayer("Farming_Game/assets/player/walk.png", 8, 4);
     // public static final BufferedImage[][] idleSprite = loadPlayer("Farming_Game/assets/player/idle.png", 4, 4);
 
@@ -104,14 +103,12 @@ public class Utils {
 
     public static Vector toVector(double[] components){
         double magnitude = Math.sqrt(Math.pow(components[0], 2) + Math.pow(components[1], 2));// pythag theorum
-        double ang = Math.toDegrees(Math.atan2(components[1], components[0]));// tan inverse of the y over the x
+        double ang = (360-Math.toDegrees(Math.atan2(components[1], components[0])))%360;// tan inverse of the y over the x
         return new Vector(magnitude, ang);
     }
     public static Vector add_vector(Vector vector_A, Vector vector_B){// method adds 2 vectors and returns the resultant vector
-        double[] A_components = vector_A.components();
-        double[] B_components = vector_B.components();
-        double resultant_mag_x = A_components[0] + B_components[0];
-        double resultant_mag_y = A_components[1] + B_components[1];
+        double resultant_mag_x = vector_A.components()[0] + vector_B.components()[0];
+        double resultant_mag_y = vector_A.components()[1] + vector_B.components()[1];
         return toVector(new double[]{resultant_mag_x, resultant_mag_y});
     }
 }

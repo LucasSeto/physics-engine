@@ -1,3 +1,6 @@
+
+import java.awt.Graphics2D;
+
 public class Vector {
     public double magnitude;
     public double angle;
@@ -5,6 +8,10 @@ public class Vector {
     public Vector(double mag, double ang){
         this.magnitude = mag;
         this.angle = ang;
+    }
+
+    public void draw(Graphics2D g2D, double x, double y){
+        g2D.drawLine((int)x, (int)y, (int)(x + components()[0]), (int)(y + components()[1]));
     }
 
     public double[] components(){

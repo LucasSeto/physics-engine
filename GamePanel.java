@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -22,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
     private Menu menu;
     public static Player player;
     public static Entity m2;
+    public ArrayList<Entity> entity_list;
 
     // Regular fields
     public int gamestate;
@@ -39,8 +41,12 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(key);
         this.setFocusable(true);
 
+        this.entity_list = new ArrayList<>();
         player = new Player(250, 100, 25);
         m2 = new Entity(new double[]{500,300}, new Vector(0,0), 100);
+        this.entity_list.add(player);
+        this.entity_list.add(m2);
+
         this.gamestate = 0;
         //offset = new int[]{player.pos[0] - SCREEN_WIDTH/2, player.pos[1] - SCREEN_HEIGHT/2};
     }
@@ -82,6 +88,9 @@ public class GamePanel extends JPanel implements Runnable{
                 player.update();
                 m2.move();
                 m2.update_hitboxs();
+                player.fnet = universal_gravitation(player, m2);
+                //m2.fnet = Utils.add_vector(player.fnet, universal_gravitation(player, m2));
+                System.out.println(player.vel.get_ang());
             }
         }
         mouse.previous = mouse.pressed;
@@ -106,14 +115,24 @@ public class GamePanel extends JPanel implements Runnable{
 
                 Utils.renderText(g2D, ""+player.acc.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 0, 0, 100, 200);
                 Utils.renderText(g2D, ""+player.acc.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 0, 0, 150, 220);
+                player.vel.draw(g2D, player.pos[0], player.pos[1]);
 
                 Utils.renderText(g2D, ""+player.fnet.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 100, 250);
                 Utils.renderText(g2D, ""+player.fnet.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 150, 270);
                 m2.draw(g2D);
+
             }
         }
         
         g2D.drawImage(Utils.crosshair, mouse.pos[0] - 25, mouse.pos[1] - 25, null);
         g2D.dispose();
+    }
+
+    public Vector universal_gravitation(Entity m1, Entity m2){
+        double delta_x = m2.pos[0] - m1.pos[0];
+        double delta_y = m2.pos[1] - m1.pos[1];
+        double delta_d = Math.sqrt(Math.pow(delta_y, 2) + Math.pow(delta_x, 2));
+        Vector fg = new Vector(0.00667*m1.mass*m2.mass/Math.pow(delta_d, 2), (360-Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
+        return fg;
     }
 }
