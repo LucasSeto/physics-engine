@@ -22,7 +22,7 @@ public class GamePanel extends JPanel implements Runnable{
     public static KeyHandler key = new KeyHandler();
     private Menu menu;
     public static Player player;
-    public static Entity m2;
+    public static Entity m2, m3;
     public ArrayList<Entity> entity_list;
 
     // Regular fields
@@ -44,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
         this.entity_list = new ArrayList<>();
         player = new Player(500, 500, 25);
         m2 = new Entity(new double[]{350,300}, new Vector(0,0), 100);
+        m3 = new Entity(new double[]{700,300}, new Vector(.5,90), 50);
         this.entity_list.add(player);
         this.entity_list.add(m2);
 
@@ -88,8 +89,12 @@ public class GamePanel extends JPanel implements Runnable{
                 player.update();
                 m2.move();
                 m2.update_hitboxs();
-                player.fnet = universal_gravitation(player, m2);
-                m2.fnet = universal_gravitation(m2, player);
+                m3.move();
+
+                player.fnet = Utils.add_vector(universal_gravitation(player, m2), universal_gravitation(player, m3));
+                m2.fnet = Utils.add_vector(universal_gravitation(m2, player), universal_gravitation(m2, m3));
+                m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, player));
+
             }
         }
         mouse.previous = mouse.pressed;
@@ -118,6 +123,7 @@ public class GamePanel extends JPanel implements Runnable{
                 Utils.renderText(g2D, ""+player.fnet.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 100, 250);
                 Utils.renderText(g2D, ""+player.fnet.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 150, 270);
                 m2.draw(g2D);
+                m3.draw(g2D);
 
             }
         }

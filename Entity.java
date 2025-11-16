@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 
 public class Entity {
     protected double[] pos;
-    protected Vector vel, acc, fnet;
+    protected Vector vel, acc, fnet, fg;
     protected int mass;
     protected Rectangle hitbox;
     
@@ -17,6 +17,7 @@ public class Entity {
         this.vel = vel;
         this.acc = new Vector(0, 0);
         this.fnet = new Vector(0, 0);
+        this.fg = new Vector(0, 0);
         this.mass = mass;
         this.hitbox = new Rectangle((int)pos[0] - this.mass/2, (int)pos[1] - this.mass/2, mass, mass);
 
