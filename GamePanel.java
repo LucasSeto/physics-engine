@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable{
     // Constants
-    public static final int SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
+    public static final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600;
 
     // Class objects
     private Thread thread;
@@ -42,8 +42,8 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
 
         this.entity_list = new ArrayList<>();
-        player = new Player(250, 100, 25);
-        m2 = new Entity(new double[]{500,300}, new Vector(0,0), 100);
+        player = new Player(500, 500, 25);
+        m2 = new Entity(new double[]{350,300}, new Vector(0,0), 100);
         this.entity_list.add(player);
         this.entity_list.add(m2);
 
@@ -89,10 +89,7 @@ public class GamePanel extends JPanel implements Runnable{
                 m2.move();
                 m2.update_hitboxs();
                 player.fnet = universal_gravitation(player, m2);
-                //m2.fnet = Utils.add_vector(player.fnet, universal_gravitation(player, m2));
-                Vector posthuman = new Vector(25, 0);
-                Vector subhuman = new Vector(60, 230);
-                System.out.println(Utils.add_vector(posthuman, subhuman).get_mag() + " " + Utils.add_vector(posthuman, subhuman).get_ang());
+                m2.fnet = universal_gravitation(m2, player);
             }
         }
         mouse.previous = mouse.pressed;
@@ -117,7 +114,6 @@ public class GamePanel extends JPanel implements Runnable{
 
                 Utils.renderText(g2D, ""+player.acc.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 0, 0, 100, 200);
                 Utils.renderText(g2D, ""+player.acc.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 0, 0, 150, 220);
-                player.vel.draw(g2D, player.pos[0], player.pos[1]);
 
                 Utils.renderText(g2D, ""+player.fnet.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 100, 250);
                 Utils.renderText(g2D, ""+player.fnet.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 150, 270);
@@ -125,8 +121,6 @@ public class GamePanel extends JPanel implements Runnable{
 
             }
         }
-        
-        g2D.drawImage(Utils.crosshair, mouse.pos[0] - 25, mouse.pos[1] - 25, null);
         g2D.dispose();
     }
 
@@ -134,7 +128,12 @@ public class GamePanel extends JPanel implements Runnable{
         double delta_x = m2.pos[0] - m1.pos[0];
         double delta_y = m2.pos[1] - m1.pos[1];
         double delta_d = Math.sqrt(Math.pow(delta_y, 2) + Math.pow(delta_x, 2));
-        Vector fg = new Vector(0.00667*m1.mass*m2.mass/Math.pow(delta_d, 2), (360-Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
+        Vector fg = new Vector(m1.mass*m2.mass/Math.pow(delta_d, 2), (360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
         return fg;
+    }
+    public Vector normal_force(Entity m1, Entity m2){
+
+        Vector fn = new Vector(0, 0);
+        return fn;
     }
 }

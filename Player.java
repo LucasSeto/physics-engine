@@ -11,7 +11,7 @@ public class Player extends Entity{
 
     // Constuctor 
     public Player(double px, double py, int mass){
-        super(new double[]{px, py}, new Vector(0,0), mass);
+        super(new double[]{px, py}, new Vector(1,270), mass);
 
     }
 
