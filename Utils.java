@@ -103,7 +103,7 @@ public class Utils {
 
     public static Vector toVector(double[] components){
         double magnitude = Math.sqrt(Math.pow(components[0], 2) + Math.pow(components[1], 2));// pythag theorum
-        double ang = (360-Math.toDegrees(Math.atan2(components[1], components[0])))%360;// tan inverse of the y over the x
+        double ang = (360+Math.toDegrees(Math.atan2(components[1], components[0])))%360;// tan inverse of the y over the x
         return new Vector(magnitude, ang);
     }
     public static Vector add_vector(Vector vector_A, Vector vector_B){// method adds 2 vectors and returns the resultant vector

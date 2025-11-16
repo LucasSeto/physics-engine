@@ -90,7 +90,9 @@ public class GamePanel extends JPanel implements Runnable{
                 m2.update_hitboxs();
                 player.fnet = universal_gravitation(player, m2);
                 //m2.fnet = Utils.add_vector(player.fnet, universal_gravitation(player, m2));
-                System.out.println(player.vel.get_ang());
+                Vector posthuman = new Vector(25, 0);
+                Vector subhuman = new Vector(60, 230);
+                System.out.println(Utils.add_vector(posthuman, subhuman).get_mag() + " " + Utils.add_vector(posthuman, subhuman).get_ang());
             }
         }
         mouse.previous = mouse.pressed;
