@@ -21,9 +21,12 @@ public class GamePanel extends JPanel implements Runnable{
     public static MouseHandler mouse = new MouseHandler();
     public static KeyHandler key = new KeyHandler();
     private Menu menu;
+
+
     public static Player player;
     public static Entity m2, m3;
-    public ArrayList<Entity> entity_list;
+
+    public ArrayList<double[]> trail;
 
     // Regular fields
     public int gamestate;
@@ -41,12 +44,11 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(key);
         this.setFocusable(true);
 
-        this.entity_list = new ArrayList<>();
-        player = new Player(500, 500, 25);
-        m2 = new Entity(new double[]{350,300}, new Vector(0,0), 100);
-        m3 = new Entity(new double[]{700,300}, new Vector(.5,90), 50);
-        this.entity_list.add(player);
-        this.entity_list.add(m2);
+        player = new Player(500, 400, 25);
+        m2 = new Entity(new double[]{350,200}, new Vector(0,0), 100);
+        m3 = new Entity(new double[]{700,200}, new Vector(.5,90), 50);
+
+        this.trail = new ArrayList<>();
 
         this.gamestate = 0;
         //offset = new int[]{player.pos[0] - SCREEN_WIDTH/2, player.pos[1] - SCREEN_HEIGHT/2};
@@ -95,6 +97,9 @@ public class GamePanel extends JPanel implements Runnable{
                 m2.fnet = Utils.add_vector(universal_gravitation(m2, player), universal_gravitation(m2, m3));
                 m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, player));
 
+                trail.add(player.pos);
+                trail.add(m2.pos);
+                trail.add(m3.pos);
             }
         }
         mouse.previous = mouse.pressed;
@@ -109,19 +114,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         switch (gamestate) {
             case 0 -> {// 
-
                 player.draw(g2D);
-                Utils.renderText(g2D, ""+player.pos[0], "assets/MinimalPixelFont.ttf", 30, 255, 255, 255, 100, 100);
-                Utils.renderText(g2D, ""+player.pos[1], "assets/MinimalPixelFont.ttf", 30, 255, 255, 255, 150, 120);
-                
-                Utils.renderText(g2D, ""+player.vel.get_mag(), "assets/MinimalPixelFont.ttf", 30, 0, 0, 255, 100, 150);
-                Utils.renderText(g2D, ""+player.vel.get_ang(), "assets/MinimalPixelFont.ttf", 30, 0, 0, 255, 150, 170);
-
-                Utils.renderText(g2D, ""+player.acc.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 0, 0, 100, 200);
-                Utils.renderText(g2D, ""+player.acc.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 0, 0, 150, 220);
-
-                Utils.renderText(g2D, ""+player.fnet.get_mag(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 100, 250);
-                Utils.renderText(g2D, ""+player.fnet.get_ang(), "assets/MinimalPixelFont.ttf", 30, 255, 255, 0, 150, 270);
                 m2.draw(g2D);
                 m3.draw(g2D);
 
