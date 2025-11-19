@@ -90,16 +90,15 @@ public class GamePanel extends JPanel implements Runnable{
                 //Player
                 player.update();
                 m2.move();
-                m2.update_hitboxs();
                 m3.move();
 
                 player.fnet = Utils.add_vector(universal_gravitation(player, m2), universal_gravitation(player, m3));
                 m2.fnet = Utils.add_vector(universal_gravitation(m2, player), universal_gravitation(m2, m3));
                 m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, player));
 
-                trail.add(player.pos);
-                trail.add(m2.pos);
-                trail.add(m3.pos);
+                if (player.colliding(m2) || player.colliding(m3) || m2.colliding(m3)){
+                    System.out.println("sigm");
+                }
             }
         }
         mouse.previous = mouse.pressed;
@@ -131,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable{
         return fg;
     }
     public Vector normal_force(Entity m1, Entity m2){
-
+        
         Vector fn = new Vector(0, 0);
         return fn;
     }

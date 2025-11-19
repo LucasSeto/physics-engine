@@ -12,8 +12,8 @@ public class Vector {
         this.angle = ang;
     }
 
-    public void draw(Graphics2D g2D, double x, double y){
-        g2D.setColor(Color.BLUE);
+    public void draw(Graphics2D g2D, double x, double y, Color c){
+        g2D.setColor(c);
         g2D.setStroke(new BasicStroke(5));
         g2D.drawLine((int)x, (int)y, (int)(x + components()[0]*25), (int)(y + components()[1]*25));
     }

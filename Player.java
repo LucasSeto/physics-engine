@@ -19,7 +19,6 @@ public class Player extends Entity{
     {
         this.inputs();
         this.move();
-        this.update_hitboxs();
     }
 
     public void inputs(){
