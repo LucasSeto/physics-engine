@@ -39,6 +39,8 @@ public class Entity {
     public void draw(Graphics2D g2D){
         g2D.setColor(Color.WHITE);
         g2D.fillOval((int)this.pos[0] - mass/2, (int)this.pos[1] - mass/2, mass, mass);
+        this.vel.draw(g2D, this.pos[0], this.pos[1]);
+        this.fnet.draw(g2D, this.pos[0], this.pos[1]);
     }
 
     public void update_hitboxs(){

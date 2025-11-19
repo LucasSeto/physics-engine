@@ -1,4 +1,5 @@
 
+import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -13,6 +14,10 @@ public class RayCast {
         start_point = new Point2D.Double(start_x, start_y);
         end_point = new Point2D.Double(end_x, end_y);
         this.ray = new Line2D.Double(start_x, start_y, end_x, end_y);
+    }
+
+    public void draw(Graphics2D g2D){
+        g2D.drawLine((int)start_point.x, (int)start_point.y, (int)end_point.x, (int)end_point.y);
     }
 
     public boolean line_intersection(Line2D.Double ray2){

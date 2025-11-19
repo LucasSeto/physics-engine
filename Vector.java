@@ -1,4 +1,6 @@
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class Vector {
@@ -11,7 +13,9 @@ public class Vector {
     }
 
     public void draw(Graphics2D g2D, double x, double y){
-        g2D.drawLine((int)x, (int)y, (int)(x + components()[0]), (int)(y + components()[1]));
+        g2D.setColor(Color.BLUE);
+        g2D.setStroke(new BasicStroke(5));
+        g2D.drawLine((int)x, (int)y, (int)(x + components()[0]*25), (int)(y + components()[1]*25));
     }
 
     public double[] components(){
