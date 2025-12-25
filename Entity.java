@@ -27,15 +27,15 @@ public class Entity {
     public void move(){
 
         // pos change
-        this.pos[0] += this.vel.get_x();
-        this.pos[1] += this.vel.get_y();
+        this.pos[0] += this.vel.get_x()/60;
+        this.pos[1] += this.vel.get_y()/60;
 
         //accelerate
         this.vel = Utils.add_vector(this.vel, this.acc);
         this.acc.set_mag(fnet.get_mag()/this.mass);
         this.acc.set_ang(fnet.get_ang());
 
-        this.momentum.set_mag(this.mass + this.vel.get_mag());
+        this.momentum.set_mag(this.mass * this.vel.get_mag());
         this.momentum.set_ang(vel.get_ang());
 
     }

@@ -33,6 +33,8 @@ public class GamePanel extends JPanel implements Runnable{
     private final int FPS = 60;
     public static int[] offset;
 
+    public static double time = 0;
+
     public GamePanel() {// Constructor
         this.thread = new Thread();
         this.menu = new Menu();
@@ -46,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         player = new Player(500, 400, 25);
         m2 = new Entity(new double[]{350,200}, new Vector(0,0), 100);
-        m3 = new Entity(new double[]{700,200}, new Vector(.5,90), 50);
+        m3 = new Entity(new double[]{700,200}, new Vector(50,90), 50);
 
         this.trail = new ArrayList<>();
 
@@ -79,6 +81,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update(){
+        time += (double)1/60;
         try {// try to set the mouse position to where it is relative to the JPanel
             mouse.pos[0] = getMousePosition().x;
             mouse.pos[1] = getMousePosition().y;
@@ -96,8 +99,17 @@ public class GamePanel extends JPanel implements Runnable{
                 m2.fnet = Utils.add_vector(universal_gravitation(m2, player), universal_gravitation(m2, m3));
                 m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, player));
 
-                if (player.colliding(m2) || player.colliding(m3) || m2.colliding(m3)){
-                    System.out.println("sigm");
+                if (player.colliding(m2)){
+                    player.fnet = normal_force(player, m2);
+                    System.out.print("a");
+                }
+                if (m3.colliding(m2)){
+                    m3.fnet = normal_force(m3, m2);
+                    System.out.print("b");
+                }
+                if (player.colliding(m3)){
+                    player.fnet = normal_force(player, m3);
+                    System.out.print("c");
                 }
             }
         }
@@ -116,7 +128,6 @@ public class GamePanel extends JPanel implements Runnable{
                 player.draw(g2D);
                 m2.draw(g2D);
                 m3.draw(g2D);
-
             }
         }
         g2D.dispose();
@@ -126,12 +137,14 @@ public class GamePanel extends JPanel implements Runnable{
         double delta_x = m2.pos[0] - m1.pos[0];
         double delta_y = m2.pos[1] - m1.pos[1];
         double delta_d = Math.sqrt(Math.pow(delta_y, 2) + Math.pow(delta_x, 2));
-        Vector fg = new Vector(m1.mass*m2.mass/Math.pow(delta_d, 2), (360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
+        Vector fg = new Vector(100*m1.mass*m2.mass/Math.pow(delta_d, 2), (360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
         return fg;
     }
     public Vector normal_force(Entity m1, Entity m2){
         
-        Vector fn = new Vector(0, 0);
+        double delta_x = m2.pos[0] - m1.pos[0];
+        double delta_y = m2.pos[1] - m1.pos[1];
+        Vector fn = new Vector(m1.vel.get_mag(), 180+((360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360));
         return fn;
     }
 }
