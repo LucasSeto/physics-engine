@@ -49,4 +49,10 @@ public class Vector {
     public void set_ang(double ang){
         this.angle = ang;
     }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return "" + this.magnitude + " " + this.angle;
+    }
 }

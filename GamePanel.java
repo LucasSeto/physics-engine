@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -22,11 +21,9 @@ public class GamePanel extends JPanel implements Runnable{
     public static KeyHandler key = new KeyHandler();
     private Menu menu;
 
-
-    public static Player player;
-    public static Entity m2, m3;
-
-    public ArrayList<double[]> trail;
+    public static Entity m1, m2, m3;
+    public Vector momentumi, momentumf; 
+    boolean colliding = false;
 
     // Regular fields
     public int gamestate;
@@ -46,11 +43,9 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(key);
         this.setFocusable(true);
 
-        player = new Player(500, 400, 25);
-        m2 = new Entity(new double[]{350,200}, new Vector(0,0), 100);
-        m3 = new Entity(new double[]{700,200}, new Vector(50,90), 50);
-
-        this.trail = new ArrayList<>();
+        m1 = new Entity(new double[]{100,300}, new Vector(50,0), 25);
+        m2 = new Entity(new double[]{800,300}, new Vector(0,0), 100);
+        //m3 = new Entity(new double[]{700,200}, new Vector(50,90), 50);
 
         this.gamestate = 0;
         //offset = new int[]{player.pos[0] - SCREEN_WIDTH/2, player.pos[1] - SCREEN_HEIGHT/2};
@@ -90,27 +85,39 @@ public class GamePanel extends JPanel implements Runnable{
 
         switch (gamestate){
             case 0 -> {
-                //Player
-                player.update();
+                m1.move();
                 m2.move();
-                m3.move();
+                //m3.move();
 
-                player.fnet = Utils.add_vector(universal_gravitation(player, m2), universal_gravitation(player, m3));
-                m2.fnet = Utils.add_vector(universal_gravitation(m2, player), universal_gravitation(m2, m3));
-                m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, player));
+                // m1.fnet = Utils.add_vector(universal_gravitation(m1, m2), universal_gravitation(m1, m3));
+                // m2.fnet = Utils.add_vector(universal_gravitation(m2, m1), universal_gravitation(m2, m3));
+                // m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, m1));
 
-                if (player.colliding(m2)){
-                    player.fnet = normal_force(player, m2);
-                    System.out.print("a");
+                System.out.println(this.momentumi);
+                if (m1.colliding(m2)){
+                    if (!colliding){
+                        this.momentumi = Utils.add_vector(m1.momentum, m2.momentum);
+                    }
+                    this.colliding = true;
+                    m1.fnet = Utils.add_vector(m1.fnet, normal_force(m1, m2));
+                } else {
+                    this.colliding = false;
+                    m1.fnet.set_mag(0);
+                    m1.fnet.set_ang(0);
                 }
-                if (m3.colliding(m2)){
-                    m3.fnet = normal_force(m3, m2);
-                    System.out.print("b");
-                }
-                if (player.colliding(m3)){
-                    player.fnet = normal_force(player, m3);
-                    System.out.print("c");
-                }
+                // if (m3.colliding(m2)){
+                //     this.colliding = true;
+                //     m3.fnet = normal_force(m3, m2);
+                // } else {
+                //     this.colliding = false;
+                // }
+                // if (m1.colliding(m3)){
+                //     this.colliding = true;
+                //     m1.fnet = normal_force(m1, m3);
+                // } else {
+                //     this.colliding = false;
+                // }
+                
             }
         }
         mouse.previous = mouse.pressed;
@@ -125,9 +132,9 @@ public class GamePanel extends JPanel implements Runnable{
 
         switch (gamestate) {
             case 0 -> {// 
-                player.draw(g2D);
+                m1.draw(g2D);
                 m2.draw(g2D);
-                m3.draw(g2D);
+                //m3.draw(g2D);
             }
         }
         g2D.dispose();
