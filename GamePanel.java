@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public static Entity m1, m2, m3;
     public Vector momentumi, momentumf; 
-    boolean colliding = false;
+    boolean colliding;
 
     // Regular fields
     public int gamestate;
@@ -43,8 +43,8 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(key);
         this.setFocusable(true);
 
-        m1 = new Entity(new double[]{100,300}, new Vector(50,0), 25);
-        m2 = new Entity(new double[]{800,300}, new Vector(0,0), 100);
+        m1 = new Entity(new double[]{800,300}, new Vector(200,180), 25);
+        m2 = new Entity(new double[]{100,320}, new Vector(0,0), 100);
         //m3 = new Entity(new double[]{700,200}, new Vector(50,90), 50);
 
         this.gamestate = 0;
@@ -93,17 +93,21 @@ public class GamePanel extends JPanel implements Runnable{
                 // m2.fnet = Utils.add_vector(universal_gravitation(m2, m1), universal_gravitation(m2, m3));
                 // m3.fnet = Utils.add_vector(universal_gravitation(m3, m2), universal_gravitation(m3, m1));
 
-                System.out.println(this.momentumi);
+                //System.out.println(this.momentumi);
                 if (m1.colliding(m2)){
-                    if (!colliding){
-                        this.momentumi = Utils.add_vector(m1.momentum, m2.momentum);
-                    }
-                    this.colliding = true;
+                    colliding = true;
+                    this.momentumf = Utils.add_vector(m1.momentum, m2.momentum);
                     m1.fnet = Utils.add_vector(m1.fnet, normal_force(m1, m2));
                 } else {
-                    this.colliding = false;
+                    if (colliding){
+                        double mass_percent1 = m1.mass/(m2.mass + m1.mass);
+                        double mass_percent2 = m2.mass/(m2.mass + m1.mass);
+                        double vel = final_vel_mag_1d_elastic_col(m1.mass, m2.mass, m1.vel.get_mag(), m2.vel.get_mag());
+                    }
+                    this.momentumi = Utils.add_vector(m1.momentum, m2.momentum);
                     m1.fnet.set_mag(0);
                     m1.fnet.set_ang(0);
+                    System.out.println("" +final_vel_mag_1d_elastic_col(m1.mass, m2.mass, m1.vel.get_mag(), m2.vel.get_mag()));
                 }
                 // if (m3.colliding(m2)){
                 //     this.colliding = true;
@@ -153,5 +157,9 @@ public class GamePanel extends JPanel implements Runnable{
         double delta_y = m2.pos[1] - m1.pos[1];
         Vector fn = new Vector(m1.vel.get_mag(), 180+((360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360));
         return fn;
+    }
+    public double final_vel_mag_1d_elastic_col(int m1, int m2, double u1, double u2){
+
+        return ((m1-m2)*u1 + 2*m2*u2)/(m1+m2);
     }
 }

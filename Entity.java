@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 public class Entity {
     protected double[] pos;
     protected Vector vel, acc, fnet, fg, momentum;
-    protected int mass;
+    protected int mass, spring_constant;
     protected Rectangle hitbox;
     
     protected RayCast vel_cast;
@@ -14,14 +14,17 @@ public class Entity {
 
     public Entity(double[] pos, Vector vel, int mass){
         this.pos = pos;
+
         this.vel = vel;
         this.acc = new Vector(0, 0);
         this.fnet = new Vector(0, 0);
         this.fg = new Vector(0, 0);
         this.momentum = new Vector(0, 0);
-        this.mass = mass;
-        this.hitbox = new Rectangle((int)pos[0] - this.mass/2, (int)pos[1] - this.mass/2, mass, mass);
 
+        this.mass = mass;
+        this.spring_constant = 1;
+
+        this.hitbox = new Rectangle((int)pos[0] - this.mass/2, (int)pos[1] - this.mass/2, mass, mass);
     }
 
     public void move(){
