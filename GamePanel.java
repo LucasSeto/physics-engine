@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements Runnable{
     // Constants
     public static final int SCREEN_WIDTH = 1500, SCREEN_HEIGHT = 1000;
+    private static final double GRAVITATIONAL_CONSTANT = 10000;
 
     // Class objects
     private Thread thread;
@@ -56,9 +57,26 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(key);
         this.setFocusable(true);
 
-        m1 = new Entity(new double[]{800,300}, new Vector(10,180), 25);
-        m2 = new Entity(new double[]{100,320}, new Vector(0,0), 100);
-        m3 = new Entity(new double[]{700,200}, new Vector(50,90), 50);
+        int orbitingMass = 10;
+        double orbitLengthScale = 150;
+        double velocityScale = Math.sqrt(GRAVITATIONAL_CONSTANT * orbitingMass / orbitLengthScale);
+        double figureCenterX = SCREEN_WIDTH * 0.4;
+        double figureCenterY = SCREEN_HEIGHT / 2.0;
+        double initialX = 0.97000436 * orbitLengthScale;
+        double initialY = 0.24308753 * orbitLengthScale;
+
+        m1 = new Entity(
+            new double[]{figureCenterX - initialX, figureCenterY - initialY},
+            Utils.toVector(new double[]{0.4662036850 * velocityScale, -0.4323657300 * velocityScale}),
+            orbitingMass);
+        m2 = new Entity(
+            new double[]{figureCenterX + initialX, figureCenterY + initialY},
+            Utils.toVector(new double[]{0.4662036850 * velocityScale, -0.4323657300 * velocityScale}),
+            orbitingMass);
+        m3 = new Entity(
+            new double[]{figureCenterX, figureCenterY},
+            Utils.toVector(new double[]{-0.9324073700 * velocityScale, 0.8647314600 * velocityScale}),
+            orbitingMass);
         entities.add(m1);
         entities.add(m2);
         entities.add(m3);
@@ -421,7 +439,7 @@ public class GamePanel extends JPanel implements Runnable{
         if (delta_d == 0) {
             return new Vector(0, 0);
         }
-        Vector fg = new Vector(10000*m1.mass*m2.mass/Math.pow(delta_d, 2), (360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
+        Vector fg = new Vector(GRAVITATIONAL_CONSTANT*m1.mass*m2.mass/Math.pow(delta_d, 2), (360+Math.toDegrees(Math.atan2(delta_y, delta_x)))%360);
         return fg;
     }
     public Vector normal_force(Entity m1, Entity m2){

@@ -31,16 +31,18 @@ public class Vector {
         double directionY = dy / vectorLength;
         double endX = x + directionX * arrowLength;
         double endY = y + directionY * arrowLength;
-        double headLength = Math.min(10, arrowLength * 0.35);
-        double headAngle = Math.PI / 6;
-        double wingOneX = endX - headLength * (directionX * Math.cos(headAngle) - directionY * Math.sin(headAngle));
-        double wingOneY = endY - headLength * (directionY * Math.cos(headAngle) + directionX * Math.sin(headAngle));
-        double wingTwoX = endX - headLength * (directionX * Math.cos(headAngle) + directionY * Math.sin(headAngle));
-        double wingTwoY = endY - headLength * (directionY * Math.cos(headAngle) - directionX * Math.sin(headAngle));
+        double headLength = Math.min(12, arrowLength * 0.4);
+        double headBaseX = endX - directionX * headLength;
+        double headBaseY = endY - directionY * headLength;
+        double headHalfWidth = headLength * 0.55;
+        double wingOneX = headBaseX - directionY * headHalfWidth;
+        double wingOneY = headBaseY + directionX * headHalfWidth;
+        double wingTwoX = headBaseX + directionY * headHalfWidth;
+        double wingTwoY = headBaseY - directionX * headHalfWidth;
 
         g2D.setColor(c);
         g2D.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2D.drawLine((int)x, (int)y, (int)endX, (int)endY);
+        g2D.drawLine((int)x, (int)y, (int)headBaseX, (int)headBaseY);
         Path2D arrowHead = new Path2D.Double();
         arrowHead.moveTo(endX, endY);
         arrowHead.lineTo(wingOneX, wingOneY);
