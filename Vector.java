@@ -2,6 +2,7 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 
 public class Vector {
     public double magnitude;
@@ -13,9 +14,39 @@ public class Vector {
     }
 
     public void draw(Graphics2D g2D, double x, double y, Color c){
+        draw(g2D, x, y, c, 1, Double.POSITIVE_INFINITY);
+    }
+
+    public void draw(Graphics2D g2D, double x, double y, Color c, double scale, double maxLength){
+        double[] vectorComponents = components();
+        double dx = vectorComponents[0] * scale;
+        double dy = vectorComponents[1] * scale;
+        double vectorLength = Math.hypot(dx, dy);
+        if (vectorLength == 0 || !Double.isFinite(vectorLength) || maxLength <= 0){
+            return;
+        }
+
+        double arrowLength = Math.min(vectorLength, maxLength);
+        double directionX = dx / vectorLength;
+        double directionY = dy / vectorLength;
+        double endX = x + directionX * arrowLength;
+        double endY = y + directionY * arrowLength;
+        double headLength = Math.min(10, arrowLength * 0.35);
+        double headAngle = Math.PI / 6;
+        double wingOneX = endX - headLength * (directionX * Math.cos(headAngle) - directionY * Math.sin(headAngle));
+        double wingOneY = endY - headLength * (directionY * Math.cos(headAngle) + directionX * Math.sin(headAngle));
+        double wingTwoX = endX - headLength * (directionX * Math.cos(headAngle) + directionY * Math.sin(headAngle));
+        double wingTwoY = endY - headLength * (directionY * Math.cos(headAngle) - directionX * Math.sin(headAngle));
+
         g2D.setColor(c);
-        g2D.setStroke(new BasicStroke(5));
-        g2D.drawLine((int)x, (int)y, (int)(x + components()[0]), (int)(y + components()[1]));
+        g2D.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2D.drawLine((int)x, (int)y, (int)endX, (int)endY);
+        Path2D arrowHead = new Path2D.Double();
+        arrowHead.moveTo(endX, endY);
+        arrowHead.lineTo(wingOneX, wingOneY);
+        arrowHead.lineTo(wingTwoX, wingTwoY);
+        arrowHead.closePath();
+        g2D.fill(arrowHead);
     }
 
     public double[] components(){
